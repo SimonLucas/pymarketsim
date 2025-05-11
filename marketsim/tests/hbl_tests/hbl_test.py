@@ -2,7 +2,7 @@ from tqdm import tqdm
 import numpy as np
 import matplotlib.pyplot as plt
 import time
-from simulator.sampled_arrival_simulator import SimulatorSampledArrival
+from marketsim.simulator.sampled_arrival_simulator import SimulatorSampledArrival
 
 surpluses = []
 valueAgents = []
@@ -21,12 +21,14 @@ for i in tqdm(range(10000)):
     sim.run()
     fundamental_val = sim.markets[0].get_final_fundamental()
     values = []
+    print(sim.agents)
     for agent_id in sim.agents:
         agent = sim.agents[agent_id]
         value = agent.get_pos_value() + agent.position * fundamental_val + agent.cash
         # print(agent.cash, agent.position, agent.get_pos_value(), value)
         values.append(value)
     valueAgents.append(values)
+    print(len(values))
     if i % 500 == 0:
         print(np.mean(valueAgents, axis = 0))
     surpluses.append(sum(values)/len(values))

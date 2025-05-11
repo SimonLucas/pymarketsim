@@ -1,8 +1,9 @@
 from collections import defaultdict
 
-import fourheap.constants
-from fourheap.order import Order, MatchedOrder
-from fourheap.order_queue import OrderQueue
+from marketsim.fourheap.constants import SELL, BUY
+from marketsim.fourheap.order import Order, MatchedOrder
+from marketsim.fourheap.order_queue import OrderQueue
+
 
 
 class FourHeap:
@@ -17,7 +18,7 @@ class FourHeap:
 
     def insert(self, order: Order):
         self.agent_id_map[order.agent_id].append(order.order_id)
-        if order.order_type == constants.SELL:
+        if order.order_type == SELL:
             if order.price <= self.buy_unmatched.peek() and self.sell_matched.peek() <= self.buy_unmatched.peek():
                 self.sell_matched.add_order(order)
                 b = self.buy_unmatched.push_to()
@@ -28,7 +29,7 @@ class FourHeap:
                 self.sell_unmatched.add_order(s)
             else:
                 self.sell_unmatched.add_order(order)
-        if order.order_type == constants.BUY:
+        if order.order_type == BUY:
             if order.price >= self.sell_unmatched.peek() and self.buy_matched.peek() >= self.sell_unmatched.peek():
                 self.buy_matched.add_order(order)
                 s = self.sell_unmatched.push_to()
